@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+        <style>
+        @import url(http://fonts.googleapis.com/earlyaccess/cwtexfangsong.css);
+        @import url(//fonts.googleapis.com/earlyaccess/cwtexhei.css);
+        @import url(//fonts.googleapis.com/earlyaccess/cwtexkai.css);
+        @import url(//fonts.googleapis.com/earlyaccess/cwtexming.css);
+        @import url(//fonts.googleapis.com/earlyaccess/cwtexyen.css);
+
+        body,ul,li,a,td{
+            font-family: "cwtexhei", "Arial";
+            font-size:12pt;
+        }
+        </style>
+    </head>
+    <body>
+ 
+    <h2>Search</h2>
+
+    <form method="get" action=".">
+            <input id="id_q" name="q" type="search" value="" autocomplete="off">
+                    <input type="submit" value="Search">
+
+        {% if query %}
+            <h3>Results</h3>
+
+            {% for result in page.object_list %}
+                <p>
+                    <a href="/reply/{{ result.object.pk }}">{{ result.object }} {{self.object.director}}</a>
+                </p>
+            {% empty %}
+                <p>No results found.</p>
+            {% endfor %}
+
+            {% if page.has_previous or page.has_next %}
+                <div>
+                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                    |
+                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            {# Show some example queries to run, maybe query syntax, something else? #}
+        {% endif %}
+    </form>
+    </body>
+</html>

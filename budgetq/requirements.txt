@@ -1,0 +1,4 @@
+pysolr
+requests
+django
+django-haystack
