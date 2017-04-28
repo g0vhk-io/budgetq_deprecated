@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
+class Keyword(models.Model):
+    keyword = models.CharField(max_length=200, primary_key=True)
 
 class Reply(models.Model):
     year = models.IntegerField()
@@ -20,7 +22,7 @@ class Reply(models.Model):
     key = models.CharField(max_length=128, primary_key=True)
     question = models.TextField()
     answer =  models.TextField()
-
+    keywords = models.ManyToManyField(Keyword)
     def __unicode__(self):
         return self.bureau + "-" + str(self.pk)
 

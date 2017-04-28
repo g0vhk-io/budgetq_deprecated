@@ -1,27 +1,31 @@
-<html>
-    <head>
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-        <style>
-        @import url(http://fonts.googleapis.com/earlyaccess/cwtexfangsong.css);
-        @import url(//fonts.googleapis.com/earlyaccess/cwtexhei.css);
-        @import url(//fonts.googleapis.com/earlyaccess/cwtexkai.css);
-        @import url(//fonts.googleapis.com/earlyaccess/cwtexming.css);
-        @import url(//fonts.googleapis.com/earlyaccess/cwtexyen.css);
-
-        body,ul,li,a,td{
-            font-family: "cwtexhei", "Arial";
-            font-size:12pt;
-        }
-        </style>
-    </head>
-    <body>
-        <h2>提問人:</h2>
-        {{reply.member}}
-        <h2>問題:</h2>
-        {{reply.question|safe}}
-        <h2>答 覆:</h2>
-        {{reply.answer|safe}}
-    </body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-full" style="margin:0px;width:100%">
+  <div class="jumbotron" style="width:100%;text-align:center;background-color:#3484fd;color:#fff">
+    <h1>財務委員會書面答覆搜尋器</h1> 
+  </div> 
+  <div style="padding-left:10px;padding-right:10px">
+  <div class="panel panel-info" style="width:25%">
+      <div class="panel-heading">管制人員的答覆</div>
+      <table class="table">
+        <tr><td width="100">提問人:</td><td>{{reply.member}}</td></tr>
+        <tr><td width="100">局長:</td><td>{{reply.director}}</td></tr>
+        <tr><td width="100">總目:</td><td>{{reply.head}} ({{reply.head_number}})</td></tr>
+        {%if  not reply.sub_head == ""%}
+        <tr><td width="100">分目:</td><td>{{reply.sub_head}} ({{reply.sub_head_number}})</td></tr>
+        {%endif%}
+        <tr><td width="100">管制人員:</td><td>{{reply.controlling_officer_title}} ({{reply.controlling_officer_name}})</td></tr>
+        <tr><td width="100">綱領:</td><td>{{reply.programme}}</td></tr>
+        <tr><td width="100">答覆編號:</td><td>{{reply.reply_serial_no}}</td></tr>
+      </table>
+  </div>
+  <div class="panel panel-primary">
+      <div class="panel-heading">問題:</div>
+      <div class="panel-body">{{reply.question|safe}}</div>
+  </div>
+  <div class="panel panel-success">
+      <div class="panel-heading">答覆:</div>
+      <div class="panel-body">{{reply.answer|safe}}</div>
+  </div>
+</div>
+{% endblock %}

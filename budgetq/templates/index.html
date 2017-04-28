@@ -3,20 +3,85 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-zh-TW.min.js"></script>
+<style>
+.pagination-detail{
+}
+</style>
+<script>
+
+function update_pagination_detail(count)
+{
+ $('.pagination-detail').html("搜尋結果:&nbsp;" + $("#keyword_label").html() + ", 共" + count + "個結果");
+}
+
+function search(keyword=null)
+{
+    if (keyword == null)
+    {
+        keyword = $("#keyword").val().trim();
+    }
+    else
+    {
+        $("#keyword").val(keyword.trim());
+    }
+    $('#keyword_label').html(keyword == "" ? "(所有結果)": keyword);
+    var table = $('#table1');
+
+    $('#table1').bootstrapTable('getOptions').pageNumber = 1;
+    $('#table1').bootstrapTable('getOptions').sortOrder = "asc";
+    $('#table1').bootstrapTable('getOptions').sortName = null;
+    table.bootstrapTable('refresh');
+
+}
+
+
+$(document).ready(function () {
+
+  $('#toolbar_parent').append($('#toolbar'));
+  $('.fixed-table-toolbar').remove();
+  $('.fixed-table-body').css('height','auto');
+  search();
+  $('#table1').on('post-body.bs.table', function (data) {
+    var totalRows = $("#table1").bootstrapTable('getOptions').totalRows;
+    $("#count_label").html(totalRows);
+    update_pagination_detail(totalRows);
+    console.log($("#table1").bootstrapTable('getOptions'));
+  });       
+  $('#ok').click(function(){
+    $('#keyword_label').html($('#keyword').val())
+
+    $('#table1').bootstrapTable('getOptions').pageNumber = 1;
+    console.log("refresh");
+    $('#table1').bootstrapTable('refresh');
+  });
+});
+</script>
 <script>
 function LinkFormatter(value, row, index) {
   return "<a target=\"_blank\" href='"+"/reply/" + row.key+"'>"+"<span class=\"glyphicon glyphicon glyphicon-circle-arrow-right\"></span>"+"</a>";
 }
 
+
 function RowFormatter(value, row, index) {
   return  ""
-    + "問題:<br/>"
+    //+ "問題:<br/>"
     + "<font size=-1>"+ row.question_short + "</font>" + "<br/>"
-    + "答案:<br/>"
-    + "<font size=-1>"+ row.answer_short + "</font>"
+    //+ "答案:<br/>"
+    //+ "<font size=-1>"+ row.answer_short + "</font>"
     + "";
 }
 
+function SearchableFormatter(value, row, index) {
+    return "<a href=\"javascript:search('" + value  + "')\">" + value + "</a>";
+}
+
+
+function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        return params;
+}
 
 </script>
 <style>
@@ -25,13 +90,13 @@ function RowFormatter(value, row, index) {
 }
 
 .glyphicon {
-    font-size: 50px;
+    font-size: 30px;
 }
 </style>
 {% endblock%}
 {% block content %}
 <div class="container-full" style="text-align:center;margin:0px;width:100%">
-  <div class="jumbotron" style="width:100%;text-align:center;background-color:#3484fd;color:#fff">
+  <div class="jumbotron" style="width:100%;text-align:center;background-color:#3484fd;color:#fff;margin-bottom:5px">
     <center>
     <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -44,24 +109,28 @@ function RowFormatter(value, row, index) {
 <div class="fb-like" data-href="https://www.facebook.com/g0vhk.io/" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div></div>
     <h1>財務委員會書面答覆搜尋器</h1> 
     <br/>
-    <div class="input-group" style="width:30%">
-        <input type="text" class="form-control" placeholder="關鍵字" aria-describedby="basic-addon1">
+    <div id="toolbar_parent">
+    <div class="input-group" style="width:30%" id="toolbar">
+        
+        <input type="text" id="keyword" class="form-control" name="q" placeholder="關鍵字" aria-describedby="basic-addon1">
         <span class="input-group-btn">
-            <button class="btn btn-secondary" type="button">搜尋</button>
+            <button id="ok" class="btn btn-secondary" type="submit">搜尋</button>
         </span>
+    </div>
     </div>
 
     </center>
   </div>
-  <div class="container-full" style="margin-top:10px;margin-left:20px;margin-right:20px;margin-bottom:20px;">
+  <div class="container-full" style="margin-top:0px;margin-left:20px;margin-right:20px;margin-bottom:20px;">
 
-   <div class="container-full" style="text-align:left;"><h2>搜尋結果</h2></div>
-    <table data-toggle="table" class="table table-bordered" data-url="/api/search">
+   <div class="container-full" style="text-align:left;display:none"><h3>搜尋結果:&nbsp;<span id="keyword_label"></span>&nbsp;共<span id="count_label"></span>個結果</h3></div>
+    <table id="table1" data-toggle="table" class="table table-bordered" data-side-pagination="server" data-pagination="true" data-url="/api/search" data-toolbar="#toolbar" data-query-params="queryParams" data-only-info-pagination="false" data-pagination-V-Align="top">
     <thead style="background-color:#5895f3;color:#fff">
         <tr>
-            <th data-field="year">年份</th>
-            <th data-field="member">提問人</th>
-            <th data-field="director">局長</th>
+            <th data-field="year" data-sortable="true" width="10%">年份</th>
+            <th data-field="reply_serial_no" data-sortable="true">答覆編號</th>
+            <th data-field="member" data-formatter="SearchableFormatter" data-sortable="true">提問人</th>
+            <th data-field="director" data-formatter="SearchableFormatter">局長</th>
             <th data-formatter="RowFormatter">答覆</th>
             <th data-formatter="LinkFormatter">連結</th>
         </tr>
@@ -70,9 +139,5 @@ function RowFormatter(value, row, index) {
   </div>
     
 </div>
-<script>
-$(document).ready(function () {
-  $('.fixed-table-body').css('height','auto');
-});
-</script>
+
 {% endblock %}
