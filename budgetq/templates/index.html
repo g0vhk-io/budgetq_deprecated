@@ -6,6 +6,12 @@
 <style>
 .pagination-detail{
 }
+
+#index_jumbotron {
+    background-image: url(/static/jump_bg_tiny.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
 </style>
 <script>
 
@@ -94,9 +100,9 @@ function queryParams(params) {
 }
 </style>
 {% endblock%}
-{% block content %}
+{%block banner%}
 <div class="container-full" style="text-align:center;margin:0px;width:100%">
-  <div class="jumbotron" style="width:100%;text-align:center;background-color:#3484fd;color:#fff;margin-bottom:5px">
+  <div class="jumbotron" id="index_jumbotron" style="width:100%;text-align:center;background-color:#3484fd;color:#fff;margin-bottom:5px">
     <center>
     <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -121,6 +127,9 @@ function queryParams(params) {
 
     </center>
   </div>
+{%endblock%}
+
+{% block content %}
   <div class="container-full" style="margin-top:0px;margin-left:20px;margin-right:20px;margin-bottom:20px;">
 
    <div class="container-full" style="text-align:left;display:none"><h3>搜尋結果:&nbsp;<span id="keyword_label"></span>&nbsp;共<span id="count_label"></span>個結果</h3></div>

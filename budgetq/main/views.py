@@ -29,4 +29,4 @@ def search_api_view(request):
             result = result.order_by(sort)
     total = result.count()
     result = result[offset:(offset+limit)]
-    return HttpResponse(json.dumps({'total': total, 'rows':[{'reply_serial_no': x.object.reply_serial_no, 'key': x.object.key, 'director': x.object.director, 'year': x.object.year, 'question_short': strip_tags(x.object.question)[0:100] + "...", "answer_short": strip_tags(x.object.answer)[0:100] + "...", "member": x.object.member} for x in result][0:100]}))
+    return HttpResponse(json.dumps({'total': total, 'rows':[{'score': x.score, 'reply_serial_no': x.object.reply_serial_no, 'key': x.object.key, 'director': x.object.director, 'year': x.object.year, 'question_short': strip_tags(x.object.question)[0:100] + "...", "answer_short": strip_tags(x.object.answer)[0:100] + "...", "member": x.object.member} for x in result][0:100]}))

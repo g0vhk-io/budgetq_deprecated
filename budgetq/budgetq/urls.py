@@ -17,6 +17,9 @@ from django.conf.urls import url, include
 from django.contrib import admin
 import main.views
 
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+import settings
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^search/', include('haystack.urls')),
@@ -24,3 +27,8 @@ urlpatterns = [
     url(r'^api/search', main.views.search_api_view),
     url(r'^$', main.views.index_view),
 ]
+
+if settings.DEBUG == True:
+    urlpatterns += staticfiles_urlpatterns()
+
+
